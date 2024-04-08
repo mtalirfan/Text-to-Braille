@@ -1,185 +1,97 @@
 import tkinter
+from time import sleep  # braille display changes after a set iteration time
+
+from braille_dictionaries import (
+    alphanumeric_dic,
+    punctuation_dic,
+)  # dictionaries containing braille
 
 br = [0, 0, 0, 0, 0, 0, 0]  # br[0] is unused, for better index handling
 
-braille_dictionary = {
-    " ": "000000",
-    ".": "010011",
-    ",": "010000",
-    "?": "011001",
-    ";": "011000",
-    "!": "011010",
-    "“": "011001",
-    '"': "011001",
-    "”": "001011",
-}  # we will populate it for patterned characters iteratively instead of manually
-
-alphanumeric = "‎1234567890abcdefghijklmnopqrstuvxyz‎‎‎‎wABCDEFGHIJKLMNOPQRSTUVXYZ‎‎‎‎W"  # indices 0, 36, 37, 38, 39, 66, 67, 68, 69 unused
-
-alphanumeric_list = list(alphanumeric)
-
-for i in range(len(alphanumeric_list)):
-    alphanumeric_code = ""
-    if alphanumeric_list[i].isupper():
-        alphanumeric_code += "000001 "
-    elif alphanumeric_list[i].islower():
-        pass
-    else:
-        try:
-            int(alphanumeric_list[i])
-        except:
-            pass
-        alphanumeric_code += "001111 "
-
-    str_to_append = ""
-    match i % 10:
-        case 1:
-            str_to_append = "10"
-            if i == 21 or i == 51 or i == 31 or i == 61:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "00"
-            if i == 31 or i == 61:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-        case 2:
-            str_to_append = "11"
-            if i == 22 or i == 52 or i == 32 or i == 62:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "00"
-            if i == 32 or i == 62:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-        case 3:
-            str_to_append = "10"
-            if i == 23 or i == 53 or i == 33 or i == 63:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "10"
-            if i == 33 or i == 63:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-        case 4:
-            str_to_append = "10"
-            if i == 24 or i == 54 or i == 34 or i == 64:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "11"
-            if i == 34 or i == 64:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-        case 5:
-            str_to_append = "10"
-            if i == 25 or i == 55 or i == 35 or i == 65:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "01"
-            if i == 35 or i == 65:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-        case 6:
-            str_to_append = "11"
-            if i == 26 or i == 56 or i == 36 or i == 66:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "10"
-            if i == 36 or i == 66:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-        case 7:
-            str_to_append = "11"
-            if i == 27 or i == 57 or i == 37 or i == 67:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "11"
-            if i == 37 or i == 67:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-        case 8:
-            str_to_append = "11"
-            if i == 28 or i == 58 or i == 38 or i == 68:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "01"
-            if i == 38 or i == 68:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-        case 9:
-            str_to_append = "01"
-            if i == 29 or i == 59 or i == 39 or i == 69:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "10"
-            if i == 39 or i == 69:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-        case 0:
-            str_to_append = "01"
-            if i == 30 or i == 60:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            str_to_append += "11"
-            if i == 40 or i == 70:
-                str_to_append += "1"
-            else:
-                str_to_append += "0"
-            alphanumeric_code += str_to_append
-
-    # print(alphanumeric_code)
-
-    braille_dictionary[f"{alphanumeric_list[i]}"] = alphanumeric_code
-braille_dictionary.pop("\u200e")
-
-print(braille_dictionary)
-
 
 def display_braille(text):
-    text_list = list(text)
-    for i in range(len(text_list)):
-        braille_code = braille_dictionary[f"{text_list[i]}"]
-        braille_list = list(braille_code)
 
-        print(braille_list)
+    # treat numbers first so we dont manipulate them later, simple conversion to braille
+    brailled_text_num = ""
+    for i in range(len(text)):
+        if text[i].isdigit():
+            # print(text[i])
+            # print(alphanumeric_dic[f"{text[i]}"])
+            brailled_text_num += alphanumeric_dic[f"{text[i]}"]
+        else:
+            brailled_text_num += text[i]
 
-        for j in range(len(braille_list)):
-            br[j + 1] = braille_list[j]
+    text_list_num = brailled_text_num.split()
 
-        print(
-            f"""
-        {br[1]} {br[4]}
-        {br[2]} {br[5]}
-        {br[3]} {br[6]}
-        """
-        )
+    # number node
+    print(brailled_text_num)
+    print(text_list_num)
+
+    # treat symbols now, simple conversion to braille
+    brailled_text_sym = ""
+    for i in range(len(brailled_text_num)):
+        if brailled_text_num[i] in punctuation_dic.keys():
+            # print(text[i])
+            # print(alphanumeric_dic[f"{text[i]}"])
+            brailled_text_sym += punctuation_dic[f"{brailled_text_num[i]}"]
+        else:
+            brailled_text_sym += brailled_text_num[i]
+
+    text_list_sym = brailled_text_sym.split()
+
+    # symbol node
+    print(brailled_text_sym)
+    print(text_list_sym)
+
+    # treat capitals next, add 000001 before and convert to lower, will do shorthand conversion later
+
+    # List item by item
+    brailled_text_caps_word = ""
+    for i in range(len(text_list_sym)):
+        if text_list_sym[i].isupper():
+            brailled_text_caps_word += f" 000001 000001 {text_list_sym[i].lower()}"
+        else:
+            brailled_text_caps_word += f" {text_list_sym[i]} "
+
+    text_list_caps_word = brailled_text_caps_word.split()
+
+    # caps word node
+    print(brailled_text_caps_word)
+    print(text_list_caps_word)
+
+    # Character by character, better option is doing list item by list item first then char by char
+    brailled_text_caps = ""
+    for i in range(len(brailled_text_caps_word)):
+        if brailled_text_caps_word[i].isupper():
+            brailled_text_caps += f" 000001 {brailled_text_caps_word[i].lower()}"
+        else:
+            brailled_text_caps += brailled_text_caps_word[i]
+
+    text_list_caps = brailled_text_caps.split()
+
+    # caps node
+    print(brailled_text_caps)
+    print(text_list_caps)
+
+    # Original basic code for lowercases
+    # brailled_text = text
+    # text_list = list(brailled_text)
+    # for i in range(len(text_list)):
+    #     braille_code = alphanumeric_dic[f"{text_list[i]}"]
+    #     braille_list = list(braille_code)
+
+    #     print(braille_list)
+
+    #     for j in range(len(braille_list)):
+    #         br[j] = braille_list[j-1]
+
+    #     print(
+    #         f"""
+    #     {br[1]} {br[4]}
+    #     {br[2]} {br[5]}
+    #     {br[3]} {br[6]}
+    #     """
+    #     )
 
 
 text = input("Enter the text you want to convert to Braille: ")
