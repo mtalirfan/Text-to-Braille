@@ -1,7 +1,8 @@
-punctuation_dic = {
+punctuation = {
     # " ": " 000000 ",
     "‎": " 000000 ",  # convert all whitespaces to an empty unicode character, to retain braille space 000000 of the original text
     ".": " 010011 ",
+    "…": " 010011 010011 010011 ",
     ",": " 010000 ",
     "?": " 011001 ",
     "“": " 011001 ",
@@ -10,17 +11,19 @@ punctuation_dic = {
     "∷": " 010010 010010 ",
     ";": " 011000 ",
     "!": " 011010 ",
-    "_": " 000001 001001 ",
+    # "_": " 000001 001001 ", # long dash
+    "_": " 000101 001001 ",  # underscore preferred
     '"': " 000001 011011 ",
     "‘": " 000001 011001 ",
     "’": " 000001 001011 ",
-    "'": " 001000 ",  # apostrophe
-    # "’": " 001000 ",
-    "′": " 011011 ",  # feet, single derivative
-    "″": " 011011 011011 ",  # inches, double derivative
+    "'": " 001000 ",  # single quotation
+    # "’": " 001000 ", # apostrophe
+    "′": " 011011 ",  # feet, single prime
+    "″": " 011011 011011 ",  # inches, double prime
     "«": " 000111 011001 ",
     "»": " 000111 001011 ",
-    "/": " 000111 001100 ",
+    # "/": " 000111 001100 ", # forward slash
+    "/": " 001100 ",  # divide sign preferred
     "\\": " 000111 100001 ",
     "{": " 000111 110001 ",
     "}": " 000111 001110 ",
@@ -35,7 +38,7 @@ punctuation_dic = {
     "(": " 000010 110001 ",
     ")": " 000010 001110 ",
     "+": " 000010 011010 ",
-    "-": " 001001 ",  # using simple dash for minus and dashes
+    "-": " 001001 ",  # using simple hyphen for minus and dashes
     "–": " 000010 001001 ",
     "×": " 000010 011001 ",  # multiplication
     "÷": " 000010 001100 ",
@@ -51,8 +54,8 @@ punctuation_dic = {
     "¥": " 000100 101111 ",
     "&": " 000100 111101 ",
     "<": " 000100 110001 ",
-    "^": " 000100 010001 ",
-    "~": " 000100 001010 ",
+    "^": " 000100 010001 ",  # caret
+    "~": " 000100 001010 ",  # tilde
     ">": " 000100 001110 ",
     "✓": " 000100 100101 ",
     "†": " 000100 000001 100111 ",
@@ -65,13 +68,233 @@ punctuation_dic = {
     "™": " 000110 011110 ",
     "♀": " 000110 101101 ",
     "♂": " 000110 101111 ",
+    "´": " 000110 001100 ",
+    "`": " 000110 100001 ",
+    "¨": " 000110 010010 ",  # umlaut
+    # "^": " 000110 100101 ", # circumflex
+    # "~": " 000110 110111 ", # tilde accent
     "→": " 110011 101010 ",
     "↓": " 110011 100101 ",
     "←": " 110011 010101 ",
     "↑": " 110011 001101 ",
 }
 
-indicator_dic = {
+shortforms = {
+    "about": "ab",
+    "above": "abv",
+    "according": "ac",
+    "across": "acr",
+    "after": "af",
+    "afternoon": "afn",
+    "afterward": "afw",
+    "again": "ag",
+    "against": "agst",
+    "almost": "alm",
+    "already": "alr",
+    "also": "al",
+    "although": "alth",
+    "altogether": "alt",
+    "always": "alw",
+    "because": "bec",
+    "before": "bef",
+    "behind": "beh",
+    "below": "bel",
+    "beneath": "ben",
+    "beside": "bes",
+    "between": "bet",
+    "beyond": "bey",
+    "blind": "bl",
+    "braille": "brl",
+    "children": "chn",
+    "conceive": "concv",
+    "conceiving": "concvg",
+    "could": "cd",
+    "deceive": "dcv",
+    "deceiving": "dcvg",
+    "declare": "dcl",
+    "declaring": "dclg",
+    "either": "ei",
+    "first": "fst",
+    "friend": "fr",
+    "good": "gd",
+    "great": "grt",
+    "herself": "herf",
+    "him": "hm",
+    "himself": "hmf",
+    "immediate": "imm",
+    "its": "xs",
+    "itself": "xf",
+    "letter": "lr",
+    "little": "ll",
+    "much": "mch",
+    "must": "mst",
+    "myself": "myf",
+    "necessary": "nec",
+    "neither": "nei",
+    "oneself": "onef",
+    "ourselves": "ourvs",
+    "paid": "pd",
+    "perceive": "percv",
+    "perceiving": "percvg",
+    "perhaps": "perh",
+    "quick": "qk",
+    "receive": "rcv",
+    "receiving": "rcvg",
+    "rejoice": "rjc",
+    "rejoicing": "rjcg",
+    "said": "sd",
+    "should": "shd",
+    "such": "sch",
+    "themselves": "themvs",
+    "thyself": "thyf",
+    "today": "td",
+    "together": "tgr",
+    "tomorrow": "tm",
+    "tonight": "tn",
+    "would": "wd",
+    "your": "yr",
+    "yourself": "yrf",
+    "yourselves": "yrvs",
+}
+
+alphabetic_wordsigns = {
+    # no sign for a
+    "but": "b",
+    "can": "c",
+    "do": "d",
+    "every": "e",
+    "from": "f",
+    "go": "g",
+    "have": "h",
+    # no sign for i
+    "just": "j",
+    "knowledge": "k",
+    "like": "l",
+    "more": "m",
+    "not": "n",
+    # no sign for o
+    "people": "p",
+    "quite": "q",
+    "rather": "r",
+    "so": "s",
+    "that": "t",
+    "us": "u",
+    "very": "v",
+    "will": "w",
+    "it": "x",
+    "you": "y",
+    "as": "z",
+}
+
+contractions_retired = {  # not used in UEB
+    "ble": " 001111 ",
+    "ation": " 000001 101110 ",
+    "ally": " 000001 101111 ",
+    "dd": " 010011 ",
+    "com": " 001001 ",
+    "to": " 011010 ",
+    "into": " 001010 011010 ",
+    "by": " 001011 ",
+    "o'clock": "o'c",
+}
+
+contractions = {  # smaller substrings should be unique and not in the larger words
+    "and": " 111101 ",
+    "for": " 111111 ",
+    "of": " 111011 ",
+    # "the": " 011101 ",
+    "with": " 011111 ",
+    "child": " 100001 ",
+    "shall": " 100101 ",
+    "this": " 100111 ",
+    "which": " 100011 ",
+    "out": " 110011 ",
+    "still": " 001100 ",
+    "be": " 011000 ",
+    "enough": " 010001 ",
+    "were": " 011011 ",
+    # "his": " 011001 ",
+    "in": " 001010 ",
+    "was": " 001011 ",
+    "day": " 000010 100110 ",
+    "ever": " 000010 100010 ",
+    "father": " 000010 110100 ",
+    "here": " 000010 110010 ",
+    "know": " 000010 101000 ",
+    "lord": " 000010 111000 ",
+    "mother": " 000010 101100 ",
+    "name": " 000010 101110 ",
+    "one": " 000010 101010 ",
+    "part": " 000010 111100 ",
+    "question": " 000010 111110 ",
+    "right": " 000010 111010 ",
+    "some": " 000010 011100 ",
+    "time": " 000010 011100 ",
+    "under": " 000010 101001 ",
+    "work": " 000010 010111 ",
+    "young": " 000010 101111 ",
+    "there": " 000010 011101 ",
+    "character": " 000010 100001 ",
+    "through": " 000010 100111 ",
+    "where": " 000010 100011 ",
+    "ought": " 000010 110011 ",
+    "upon": " 000110 101001 ",
+    "word": " 000110 010111 ",
+    "these": " 000110 011101 ",
+    "those": " 000110 100111 ",
+    "whose": " 000110 100011 ",
+    "cannot": " 000111 100100 ",
+    "had": " 000111 110010 ",
+    "many": " 000111 101100 ",
+    "spirit": " 000111 011100 ",
+    "world": " 000111 010111 ",
+    "their": " 000111 011101 ",
+    "ound": " 000101 100110 ",  # ou substring, promoted to contractions
+    "ount": " 000101 011110 ",  # ou substring, promoted to contractions
+    "ence": " 000011 100010 ",  # en substring, promoted to contractions
+    "ment": " 000011 011110 ",  # en substring, promoted to contractions
+}
+
+groupsigns = {
+    "the": " 011101 ",  # substring for other words in contractions
+    "his": " 011001 ",  # substring for other words in contractions
+    "ch": " 100001 ",
+    "sh": " 100101 ",
+    "th": " 100111 ",
+    "wh": " 100011 ",
+    "ou": " 110011 ",
+    "st": " 001100 ",
+    "gh": " 110001 ",
+    "ed": " 110101 ",
+    "er": " 110111 ",
+    "ow": " 010101 ",
+    "ar": " 001110 ",
+    "ing": " 001101 ",
+    "ea": " 010000 ",
+    "bb": " 011000 ",
+    "cc": " 010010 ",
+    "ff": " 011010 ",
+    "gg": " 011011 ",
+    "be": " 011000 ",
+    "con": " 010010 ",
+    "dis": " 010011 ",
+    "en": " 010001 ",
+    # "in": " 001010 ", # substring here, but in contractions anyways
+    # "ound": " 000101 100110 ",  # ou substring, promoted to contractions
+    "ance": " 000101 100010 ",
+    "sion": " 000101 101110 ",
+    "less": " 000101 011100 ",
+    # "ount": " 000101 011110 ",  # ou substring, promoted to contractions
+    # "ence": " 000011 100010 ",  # en substring, promoted to contractions
+    "ong": " 000011 110110 ",
+    "ful": " 000011 111000 ",
+    "tion": " 000011 101110 ",
+    "ness": " 000011 011100 ",
+    # "ment": " 000011 011110 ", # en substring, promoted to contractions
+    "ity": " 000011 101111 ",
+}
+
+indicator = {
     "capital": " 000001 ",
     "letter": " 001111 ",
     "shape": " 110101 ",
@@ -80,14 +303,14 @@ indicator_dic = {
     "superscript": " 001010 ",
 }
 
-alphanumeric_dic = (
+alphanumeric = (
     {}
 )  # we will populate it for patterned characters iteratively instead of manually
 
-alphanumeric = "‎1234567890abcdefghijklmnopqrstuvxyz‎‎‎‎wABCDEFGHIJKLMNOPQRSTUVXYZ‎‎‎‎W"
+alphanumeric_string = "‎1234567890abcdefghijklmnopqrstuvxyz‎‎‎‎wABCDEFGHIJKLMNOPQRSTUVXYZ‎‎‎‎W"
 # indices 0, 36, 37, 38, 39, 66, 67, 68, 69 unused
 
-alphanumeric_list = list(alphanumeric)
+alphanumeric_list = list(alphanumeric_string)
 
 for i in range(len(alphanumeric_list)):
     alphanumeric_code = ""
@@ -227,8 +450,7 @@ for i in range(len(alphanumeric_list)):
 
     # print(alphanumeric_code)
 
-    alphanumeric_dic[f"{alphanumeric_list[i]}"] = alphanumeric_code
-alphanumeric_dic.pop("\u200e")
+    alphanumeric[f"{alphanumeric_list[i]}"] = alphanumeric_code
+alphanumeric.pop("\u200e")
 
-
-# print(alphanumeric_dic)
+# print(alphanumeric)

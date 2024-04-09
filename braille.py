@@ -2,8 +2,12 @@ import tkinter
 from time import sleep  # braille display changes after a set iteration time
 
 from braille_dictionaries import (
-    alphanumeric_dic,
-    punctuation_dic,
+    alphanumeric,
+    punctuation,
+    shortforms,
+    alphabetic_wordsigns,
+    contractions,
+    groupsigns,
 )  # dictionaries containing braille
 
 br = [0, 0, 0, 0, 0, 0, 0]  # br[0] is unused, for better index handling
@@ -31,7 +35,7 @@ def display_braille(text):
     for i in range(len(text)):
         if text[i] == " ":
             text_sym_spaced += f" ‎ "
-        elif text[i] in punctuation_dic.keys():
+        elif text[i] in punctuation.keys():
             text_sym_spaced += f" {text[i]} "
         else:
             text_sym_spaced += text[i]
@@ -48,7 +52,7 @@ def display_braille(text):
     for i in range(len(text_list_sym_spaced)):
         if text_list_sym_spaced[i].isdigit():
             # print(text[i])
-            # print(alphanumeric_dic[f"{text[i]}"])
+            # print(alphanumeric[f"{text[i]}"])
             brailled_text_num_word += f" 001111 {text_list_sym_spaced[i]} "
         else:
             brailled_text_num_word += f" {text_list_sym_spaced[i]} "
@@ -70,7 +74,7 @@ def display_braille(text):
             for j in range(len(text_list_num_word[i])):
                 if text_list_num_word[i][j].isdigit():
                     brailled_text_num += (
-                        f' 001111 {alphanumeric_dic[f"{text_list_num_word[i][j]}"]} '
+                        f' 001111 {alphanumeric[f"{text_list_num_word[i][j]}"]} '
                     )
                 else:
                     brailled_text_num += f"{text_list_num_word[i][j]}"
@@ -86,7 +90,7 @@ def display_braille(text):
 
                     if text_list_num_word[i][j].isdigit():
                         brailled_text_num += (
-                            f' {alphanumeric_dic[f"{text_list_num_word[i][j]}"]} '
+                            f' {alphanumeric[f"{text_list_num_word[i][j]}"]} '
                         )
                     else:
                         brailled_text_num += f"{text_list_num_word[i]}"
@@ -100,10 +104,10 @@ def display_braille(text):
     # treat symbols now, simple conversion to braille
     brailled_text_sym = ""
     for i in range(len(brailled_text_num)):
-        if brailled_text_num[i] in punctuation_dic.keys():
+        if brailled_text_num[i] in punctuation.keys():
             # print(text[i])
-            # print(alphanumeric_dic[f"{text[i]}"])
-            brailled_text_sym += punctuation_dic[f"{brailled_text_num[i]}"]
+            # print(alphanumeric[f"{text[i]}"])
+            brailled_text_sym += punctuation[f"{brailled_text_num[i]}"]
         else:
             brailled_text_sym += brailled_text_num[i]
 
@@ -143,11 +147,13 @@ def display_braille(text):
     print(brailled_text_caps)
     # print(text_list_caps)
 
+    # Finally lowercase, changing to shorthand and then braille from dictionaries
+
     # Original basic code for lowercases
     # brailled_text = text
     # text_list = list(brailled_text)
     # for i in range(len(text_list)):
-    #     braille_code = alphanumeric_dic[f"{text_list[i]}"]
+    #     braille_code = alphanumeric[f"{text_list[i]}"]
     #     braille_list = list(braille_code)
 
     #     print(braille_list)
