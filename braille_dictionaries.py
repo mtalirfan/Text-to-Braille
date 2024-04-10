@@ -13,6 +13,7 @@ punctuation = {
     "!": " 011010 ",
     # "_": " 000001 001001 ", # long dash
     "_": " 000101 001001 ",  # underscore preferred
+    "π": " 000101 111100 ",
     '"': " 000001 011011 ",
     "‘": " 000001 011001 ",
     "’": " 000001 001011 ",
@@ -43,7 +44,9 @@ punctuation = {
     "×": " 000010 011001 ",  # multiplication
     "÷": " 000010 001100 ",
     "=": " 000010 011011 ",
+    "≠": " 000010 011011 000100 100011 ",
     "*": " 000010 001010 ",
+    "√": " 000010 100101 ",
     "@": " 000100 100000 ",
     "¢": " 000100 100100 ",
     "€": " 000100 100010 ",
@@ -79,16 +82,62 @@ punctuation = {
     "↑": " 110011 001101 ",
 }
 
+wordsigns = {  # all: alphabetic, strong and lower
+    # ALPHABETIC WORDSIGNS
+    # no sign for a
+    "but": "b",
+    "can": "c",
+    "do": "d",
+    "every": "e",
+    "from": "f",
+    "go": "g",
+    "have": "h",
+    # no sign for i
+    "just": "j",
+    "knowledge": "k",
+    "like": "l",
+    "more": "m",
+    "not": "n",
+    # no sign for o
+    "people": "p",
+    "quite": "q",
+    "rather": "r",
+    "so": "s",
+    "that": "t",
+    "us": "u",
+    "very": "v",
+    "will": "w",
+    "it": "x",
+    "you": "y",
+    "as": "z",
+    # STRONG WORDSIGNS top bottom left right dots
+    "child": " 100001 ",
+    "shall": " 100101 ",
+    "this": " 100111 ",
+    "which": " 100011 ",
+    "out": " 110011 ",
+    # LOWER WORDSIGNS not dots 1 or 4
+    "still": " 001100 ",
+    "be": " 011000 ",
+    "enough": " 010001 ",
+    "were": " 011011 ",
+    "his": " 011001 ",
+    "in": " 001010 ",
+    "was": " 001011 ",
+}
+
 shortforms = {
     "about": "ab",
     "above": "abv",
     "according": "ac",
     "across": "acr",
-    "after": "af",
+    # "after": "af", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "afternoon": "afn",
     "afterward": "afw",
-    "again": "ag",
+    "after": "af",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
+    # "again": "ag", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "against": "agst",
+    "again": "ag",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "almost": "alm",
     "already": "alr",
     "also": "al",
@@ -119,11 +168,13 @@ shortforms = {
     "good": "gd",
     "great": "grt",
     "herself": "herf",
-    "him": "hm",
+    # "him": "hm", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "himself": "hmf",
+    "him": "hm",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "immediate": "imm",
-    "its": "xs",
+    # "its": "xs", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "itself": "xf",
+    "its": "xs",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "letter": "lr",
     "little": "ll",
     "much": "mch",
@@ -152,70 +203,20 @@ shortforms = {
     "tomorrow": "tm",
     "tonight": "tn",
     "would": "wd",
-    "your": "yr",
+    # "your": "yr", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "yourself": "yrf",
     "yourselves": "yrvs",
+    "your": "yr",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
 }
 
-alphabetic_wordsigns = {
-    # no sign for a
-    "but": "b",
-    "can": "c",
-    "do": "d",
-    "every": "e",
-    "from": "f",
-    "go": "g",
-    "have": "h",
-    # no sign for i
-    "just": "j",
-    "knowledge": "k",
-    "like": "l",
-    "more": "m",
-    "not": "n",
-    # no sign for o
-    "people": "p",
-    "quite": "q",
-    "rather": "r",
-    "so": "s",
-    "that": "t",
-    "us": "u",
-    "very": "v",
-    "will": "w",
-    "it": "x",
-    "you": "y",
-    "as": "z",
-}
-
-contractions_retired = {  # not used in UEB
-    "ble": " 001111 ",
-    "ation": " 000001 101110 ",
-    "ally": " 000001 101111 ",
-    "dd": " 010011 ",
-    "com": " 001001 ",
-    "to": " 011010 ",
-    "into": " 001010 011010 ",
-    "by": " 001011 ",
-    "o'clock": "o'c",
-}
-
-contractions = {  # smaller substrings should be unique and not in the larger words
+contractions = {  # smaller substrings should be unique, if they appear in the larger words, put them in lower order
+    # STRONG CONTRACTIONS (Part and Whole Word)
     "and": " 111101 ",
     "for": " 111111 ",
     "of": " 111011 ",
-    # "the": " 011101 ",
+    # "the": " 011101 ", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "with": " 011111 ",
-    "child": " 100001 ",
-    "shall": " 100101 ",
-    "this": " 100111 ",
-    "which": " 100011 ",
-    "out": " 110011 ",
-    "still": " 001100 ",
-    "be": " 011000 ",
-    "enough": " 010001 ",
-    "were": " 011011 ",
-    # "his": " 011001 ",
-    "in": " 001010 ",
-    "was": " 001011 ",
+    # INITIAL-LETTER CONTRACTIONS
     "day": " 000010 100110 ",
     "ever": " 000010 100010 ",
     "father": " 000010 110100 ",
@@ -249,20 +250,16 @@ contractions = {  # smaller substrings should be unique and not in the larger wo
     "spirit": " 000111 011100 ",
     "world": " 000111 010111 ",
     "their": " 000111 011101 ",
-    "ound": " 000101 100110 ",  # ou substring, promoted to contractions
-    "ount": " 000101 011110 ",  # ou substring, promoted to contractions
-    "ence": " 000011 100010 ",  # en substring, promoted to contractions
-    "ment": " 000011 011110 ",  # en substring, promoted to contractions
+    "the": " 011101 ",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
 }
 
 groupsigns = {
-    "the": " 011101 ",  # substring for other words in contractions
-    "his": " 011001 ",  # substring for other words in contractions
+    # STRONG GROUPSIGNS
     "ch": " 100001 ",
     "sh": " 100101 ",
     "th": " 100111 ",
     "wh": " 100011 ",
-    "ou": " 110011 ",
+    # "ou": " 110011 ", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
     "st": " 001100 ",
     "gh": " 110001 ",
     "ed": " 110101 ",
@@ -270,6 +267,7 @@ groupsigns = {
     "ow": " 010101 ",
     "ar": " 001110 ",
     "ing": " 001101 ",
+    # LOWER GROUPSIGNS
     "ea": " 010000 ",
     "bb": " 011000 ",
     "cc": " 010010 ",
@@ -278,20 +276,36 @@ groupsigns = {
     "be": " 011000 ",
     "con": " 010010 ",
     "dis": " 010011 ",
-    "en": " 010001 ",
-    # "in": " 001010 ", # substring here, but in contractions anyways
-    # "ound": " 000101 100110 ",  # ou substring, promoted to contractions
+    # "en": " 010001 ", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
+    # "in": " 001010 ", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
+    # FINAL-LETTER GROUPSIGNS
+    "ound": " 000101 100110 ",
     "ance": " 000101 100010 ",
     "sion": " 000101 101110 ",
     "less": " 000101 011100 ",
-    # "ount": " 000101 011110 ",  # ou substring, promoted to contractions
-    # "ence": " 000011 100010 ",  # en substring, promoted to contractions
+    "ount": " 000101 011110 ",
+    "ence": " 000011 100010 ",
     "ong": " 000011 110110 ",
     "ful": " 000011 111000 ",
     "tion": " 000011 101110 ",
     "ness": " 000011 011100 ",
-    # "ment": " 000011 011110 ", # en substring, promoted to contractions
+    "ment": " 000011 011110 ",
     "ity": " 000011 101111 ",
+    "ou": " 110011 ",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
+    "en": " 010001 ",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
+    "in": " 001010 ",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
+}
+
+contractions_retired = {  # not used in UEB, so not used in this project
+    "ble": " 001111 ",
+    "ation": " 000001 101110 ",
+    "ally": " 000001 101111 ",
+    "dd": " 010011 ",
+    "com": " 001001 ",
+    "to": " 011010 ",
+    "into": " 001010 011010 ",
+    "by": " 001011 ",
+    "o'clock": "o'c",
 }
 
 indicator = {
