@@ -1,4 +1,4 @@
-import tkinter
+import tkinter as tk
 from time import sleep  # braille display changes after a set iteration time
 
 from braille_dictionaries import (
@@ -13,6 +13,14 @@ from braille_dictionaries import (
 br = [0, 0, 0, 0, 0, 0, 0]  # br[0] is unused, for better index handling
 
 grade1 = False
+
+grade1_input = input(
+    "Default to Grade 2 Contracted Braille. Toggle to Grade 1 Uncontracted Braille? (y/n) "
+)
+if grade1_input.lower() in ["yes", "y"]:
+    grade1 = True
+else:
+    grade1 = False
 
 
 def display_braille(text):
@@ -38,23 +46,43 @@ def display_braille(text):
     # print(text_sym_spaced)
     # print(text_list_sym_spaced)
 
-    if grade1:  # grade 1 character by character
-        brailled_text = ""
+    if grade1 == True:  # grade 1
+        brailled_text_num = ""
         for i in range(len(text_sym_spaced)):
             if (
                 text_sym_spaced[i] in alphanumeric.keys()
                 and text_sym_spaced[i].isdigit()
             ):  # number
-                brailled_text += f" 001111 {alphanumeric.get(text_sym_spaced[i])} "  # numbers in dictionary don't have prefixes
-            elif text_sym_spaced[i] in punctuation.keys():  # punctuation
-                brailled_text += punctuation.get(text_sym_spaced[i])
-            elif (
-                text_sym_spaced[i] in alphanumeric.keys()
-                and text_sym_spaced[i].isalpha()
-            ):  # letters, capital letters in dictionary have prefix
-                brailled_text += alphanumeric.get(text_sym_spaced[i])
+                brailled_text_num += f" 001111 {alphanumeric.get(text_sym_spaced[i])} "  # numbers in dictionary don't have prefixes
             else:
-                brailled_text += text_sym_spaced[i]
+                brailled_text_num += text_sym_spaced[i]
+
+        # number node
+        # print(brailled_text_num)
+
+        brailled_text_punct = ""
+        for i in range(len(brailled_text_num)):
+            if brailled_text_num[i] in punctuation.keys():  # punctuation
+                brailled_text_punct += punctuation.get(brailled_text_num[i])
+            else:
+                brailled_text_punct += brailled_text_num[i]
+
+        # punctuation node
+        # print(brailled_text_punct)
+
+        brailled_text = ""
+        for i in range(len(brailled_text_punct)):
+            if (
+                brailled_text_punct[i] in alphanumeric.keys()
+                and brailled_text_punct[i].isalpha()
+            ):  # letters, capital letters in dictionary have prefix
+                brailled_text += alphanumeric.get(brailled_text_punct[i])
+            elif (
+                brailled_text_punct[i].isdigit() or brailled_text_punct[i] == " "
+            ):  # number or whitespace
+                brailled_text += brailled_text_punct[i]
+            else:  # unrecognisable character
+                brailled_text += " 000000 "
 
         brailled_list = brailled_text.split()
 
@@ -320,14 +348,18 @@ def display_braille(text):
         # individual letter decompile
         brailled_text = ""
         for i in range(len(brailled_text_groupsigns)):
-            if (
+            if (  # letters in alphanumeric dictionary
                 brailled_text_groupsigns[i] in alphanumeric.keys()
                 and brailled_text_groupsigns[i].isalpha()
             ):
                 brailled_text += alphanumeric.get(brailled_text_groupsigns[i])
-            else:
+            elif (  # 6 digit numbers and whitespace since whitespace don't hurt
+                brailled_text_groupsigns[i].isdigit()
+                or brailled_text_groupsigns[i] == " "
+            ):
                 brailled_text += brailled_text_groupsigns[i]
-
+            else:  # any other unrecognisable character
+                brailled_text += " 000000 "
         brailled_list = brailled_text.split()
 
         # symbol node
@@ -335,43 +367,27 @@ def display_braille(text):
         # print(brailled_list)
 
     # All braille node
-    print(brailled_text)
+    # print(brailled_text)
     # print(brailled_list)
 
-    # Original basic code for lowercases
-    # brailled_text = text
-    # text_list = list(brailled_text)
-    # for i in range(len(text_list)):
-    #     braille_code = alphanumeric[f"{text_list[i]}"]
-    #     braille_list = list(braille_code)
+    # Display brailled list
+    for i in range(len(brailled_list)):  # each list element, a 6 digit code
+        for j in range(len(brailled_list[i])):  # iterate through 6 digit code element
+            br[j + 1] = brailled_list[i][j]
 
-    #     print(braille_list)
-
-    #     for j in range(len(braille_list)):
-    #         br[j] = braille_list[j-1]
-
-    #     print(
-    #         f"""
-    #     {br[1]} {br[4]}
-    #     {br[2]} {br[5]}
-    #     {br[3]} {br[6]}
-    #     """
-    #     )
+        print(
+            f"""
+        {br[1]} {br[4]}
+        {br[2]} {br[5]}
+        {br[3]} {br[6]}
+        """
+        )
+        sleep(timer)
 
 
-def grade1_toggle():
-    grade1_input = input(
-        "Default to Grade 2 Contracted Braille. Toggle to Grade 1 Uncontracted Braille? (y/n) "
-    )
-    if grade1_input.lower() in ["yes", "y"]:
-        grade1 = True
-    else:
-        grade1 = False
-
-
-# grade1_toggle()
+timer = 0  # 1 second between displays
 
 # text = input("Enter the text you want to convert to Braille: ")
 # display_braille(text)
 
-display_braille("ME-499 Final-Year Project (6CH) (90.50) (A)")
+display_braille("ME-499 Final-Year Project (6CH) (90) (A)")
