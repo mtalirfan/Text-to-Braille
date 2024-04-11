@@ -23,8 +23,8 @@ punctuation = {
     "″": " 011011 011011 ",  # inches, double prime
     "«": " 000111 011001 ",
     "»": " 000111 001011 ",
-    # "/": " 000111 001100 ", # forward slash
-    "/": " 001100 ",  # divide sign preferred
+    "/": " 000111 001100 ",  # forward slash preferred, contains indicator
+    # "/": " 001100 ",  # divide sign
     "\\": " 000111 100001 ",
     "{": " 000111 110001 ",
     "}": " 000111 001110 ",
@@ -259,14 +259,14 @@ groupsigns = {
     "sh": " 100101 ",
     "th": " 100111 ",
     "wh": " 100011 ",
-    # "ou": " 110011 ", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
+    "ou": " 110011 ",
     "st": " 001100 ",
     "gh": " 110001 ",
     "ed": " 110101 ",
     "er": " 110111 ",
     "ow": " 010101 ",
     "ar": " 001110 ",
-    "ing": " 001101 ",
+    # "ing": " 001101 ", # Not used at beginning, so in groupsigns final dictionary
     # LOWER GROUPSIGNS
     "ea": " 010000 ",
     "bb": " 011000 ",
@@ -276,8 +276,12 @@ groupsigns = {
     "be": " 011000 ",
     "con": " 010010 ",
     "dis": " 010011 ",
-    # "en": " 010001 ", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
-    # "in": " 001010 ", # keeping larger word above smaller substring gives it preference, since it appears first in matches list
+    "en": " 010001 ",
+    "in": " 001010 ",
+}
+
+groupsigns_final = {  # checks for string.startswith(substring key) == False
+    "ing": " 001101 ",  # Not used at beginning, so in groupsigns final dictionary
     # FINAL-LETTER GROUPSIGNS
     "ound": " 000101 100110 ",
     "ance": " 000101 100010 ",
@@ -291,9 +295,6 @@ groupsigns = {
     "ness": " 000011 011100 ",
     "ment": " 000011 011110 ",
     "ity": " 000011 101111 ",
-    "ou": " 110011 ",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
-    "en": " 010001 ",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
-    "in": " 001010 ",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
 }
 
 contractions_retired = {  # not used in UEB, so not used in this project
