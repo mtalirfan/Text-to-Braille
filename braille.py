@@ -1,4 +1,3 @@
-import tkinter as tk
 from time import sleep  # braille display changes after a set iteration time
 
 from braille_dictionaries import (
@@ -13,20 +12,29 @@ from braille_dictionaries import (
 
 br = [0, 0, 0, 0, 0, 0, 0]  # br[0] is unused, for better index handling
 
-grade1 = False
+grade1 = False  # grade 1 or 2
+timer = 0  # seconds between displays
 
-grade1_input = input(
-    "Default to Grade 2 Contracted Braille. Toggle to Grade 1 Uncontracted Braille? (y/n) "
-)
-if grade1_input.lower() in ["yes", "y"]:
-    grade1 = True
-else:
-    grade1 = False
+
+def toggle_grade():
+    global grade1
+    grade1_input = input(
+        "Default to Grade 2 Contracted Braille. Toggle to Grade 1 Uncontracted Braille? (y/n): "
+    )
+    if grade1_input.lower() in ["yes", "y"]:
+        grade1 = True
+    else:
+        grade1 = False
+
+
+toggle_grade()
 
 
 def display_braille(text):
 
     # print(text)
+
+    global grade1
 
     # for both grade 1 and 2
     # space out symbols and punctuation, convert spaces themselves to empty character ‎
@@ -387,8 +395,7 @@ def display_braille(text):
         single_braille = f"""
  {br[1]} {br[4]} 
  {br[2]} {br[5]} 
- {br[3]} {br[6]} 
-        """
+ {br[3]} {br[6]} """
         braille_text_1 += f" {br[1]} {br[4]} "
         braille_text_2 += f" {br[2]} {br[5]} "
         braille_text_3 += f" {br[3]} {br[6]} "
@@ -396,16 +403,19 @@ def display_braille(text):
         sleep(timer)
 
     # braille text node
-    print(text)
+    print(f"Text:\n{text}")
+    if grade1:
+        print("Grade 1 Uncontracted Braille:")
+    else:
+        print("Grade 2 Contracted Braille:")
     print(braille_text_1)
     print(braille_text_2)
     print(braille_text_3)
 
 
-timer = 0  # 1 second between displays
-
 text = input("Enter the text you want to convert to Braille: ")
 display_braille(text)
 
+# Some examples
 # display_braille("ME-499 Final-Year Project (6CH) (90) (A)")
 # display_braille("The quick brown fox jumps over a lazy dog.")
