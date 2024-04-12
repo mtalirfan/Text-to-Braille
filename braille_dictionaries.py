@@ -1,3 +1,70 @@
+unicode = {  # 6 digit code to unicode characters, from https://unicode.org/charts/nameslist/c_2800.html
+    "000000": "⠀",
+    "100000": "⠁",
+    "010000": "⠂",
+    "110000": "⠃",
+    "001000": "⠄",
+    "101000": "⠅",
+    "011000": "⠆",
+    "111000": "⠇",
+    "000100": "⠈",
+    "100100": "⠉",
+    "010100": "⠊",
+    "110100": "⠋",
+    "001100": "⠌",
+    "101100": "⠍",
+    "011100": "⠎",
+    "111100": "⠏",
+    "000010": "⠐",
+    "100010": "⠑",
+    "010010": "⠒",
+    "110010": "⠓",
+    "001010": "⠔",
+    "101010": "⠕",
+    "011010": "⠖",
+    "111010": "⠗",
+    "000110": "⠘",
+    "100110": "⠙",
+    "010110": "⠚",
+    "110110": "⠛",
+    "001110": "⠜",
+    "101110": "⠝",
+    "011110": "⠞",
+    "111110": "⠟",
+    "000001": "⠠",
+    "100001": "⠡",
+    "010001": "⠢",
+    "110001": "⠣",
+    "001001": "⠤",
+    "101001": "⠥",
+    "011001": "⠦",
+    "111001": "⠧",
+    "000101": "⠨",
+    "100101": "⠩",
+    "010101": "⠪",
+    "110101": "⠫",
+    "001101": "⠬",
+    "101101": "⠭",
+    "011101": "⠮",
+    "111101": "⠯",
+    "000011": "⠰",
+    "100011": "⠱",
+    "010011": "⠲",
+    "110011": "⠳",
+    "001011": "⠴",
+    "101011": "⠵",
+    "011011": "⠶",
+    "111011": "⠷",
+    "000111": "⠸",
+    "100111": "⠹",
+    "010111": "⠺",
+    "110111": "⠻",
+    "001111": "⠼",
+    "101111": "⠽",
+    "011111": "⠾",
+    "111111": "⠿",
+}
+
 punctuation = {
     # " ": " 000000 ",
     "‎": " 000000 ",  # convert all whitespaces to an empty unicode character, to retain braille space 000000 of the original text
@@ -34,7 +101,7 @@ punctuation = {
     "[": " 000101 110001 ",
     "]": " 000101 001110 ",
     "%": " 000101 001011 ",
-    "—": " 000010 000001 001001 ",
+    "—": " 000001 001001 ",
     "〃": " 000010 010000 ",
     "(": " 000010 110001 ",
     ")": " 000010 001110 ",
@@ -230,7 +297,7 @@ contractions = {  # smaller substrings should be unique, if they appear in the l
     "question": " 000010 111110 ",
     "right": " 000010 111010 ",
     "some": " 000010 011100 ",
-    "time": " 000010 011100 ",
+    "time": " 000010 011110 ",
     "under": " 000010 101001 ",
     "work": " 000010 010111 ",
     "young": " 000010 101111 ",
@@ -251,6 +318,24 @@ contractions = {  # smaller substrings should be unique, if they appear in the l
     "world": " 000111 010111 ",
     "their": " 000111 011101 ",
     "the": " 011101 ",  # keeping larger word above smaller substring gives it preference, since it appears first in matches list
+}
+
+
+groupsigns_final = {  # checks for string.startswith(substring key) == False
+    "ing": " 001101 ",  # Not used at beginning, so in groupsigns final dictionary
+    # FINAL-LETTER GROUPSIGNS
+    "ound": " 000101 100110 ",
+    "ance": " 000101 100010 ",
+    "sion": " 000101 101110 ",
+    "less": " 000101 011100 ",
+    "ount": " 000101 011110 ",
+    "ence": " 000011 100010 ",
+    "ong": " 000011 110110 ",
+    "ful": " 000011 111000 ",
+    "tion": " 000011 101110 ",
+    "ness": " 000011 011100 ",
+    "ment": " 000011 011110 ",
+    "ity": " 000011 101111 ",
 }
 
 groupsigns = {
@@ -278,23 +363,6 @@ groupsigns = {
     "dis": " 010011 ",
     "en": " 010001 ",
     "in": " 001010 ",
-}
-
-groupsigns_final = {  # checks for string.startswith(substring key) == False
-    "ing": " 001101 ",  # Not used at beginning, so in groupsigns final dictionary
-    # FINAL-LETTER GROUPSIGNS
-    "ound": " 000101 100110 ",
-    "ance": " 000101 100010 ",
-    "sion": " 000101 101110 ",
-    "less": " 000101 011100 ",
-    "ount": " 000101 011110 ",
-    "ence": " 000011 100010 ",
-    "ong": " 000011 110110 ",
-    "ful": " 000011 111000 ",
-    "tion": " 000011 101110 ",
-    "ness": " 000011 011100 ",
-    "ment": " 000011 011110 ",
-    "ity": " 000011 101111 ",
 }
 
 contractions_retired = {  # not used in UEB, so not used in this project

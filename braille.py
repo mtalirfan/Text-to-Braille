@@ -1,6 +1,7 @@
 from time import sleep  # braille display changes after a set iteration time
 
 from braille_dictionaries import (
+    unicode,
     alphanumeric,
     punctuation,
     wordsigns,
@@ -37,7 +38,7 @@ def display_braille(text):
     global grade1
 
     # for both grade 1 and 2
-    # space out symbols and punctuation, convert spaces themselves to empty character ‎
+    # space out symbols and punctuation, convert spaces to empty character ‎
     text_sym_spaced = ""
     for i in range(len(text)):
         if text[i] == " ":
@@ -47,22 +48,73 @@ def display_braille(text):
         else:
             text_sym_spaced += text[i]
 
+    # count all double quotations to replace for opening and closing
+    quotation_count = text_sym_spaced.count('"')
+    # print(quotation_count)
+
+    # 2 = set nth substrings of "foo" to be replaced
+    # Replace nth subs in super string
+    for n in range(2, quotation_count + 2, 2)[::-1]:
+        text_sym_spaced = text_sym_spaced.replace('"', "”", n).replace(
+            "”", '"', n - 1
+        )  # replace every 2nd with closing quotation
+        # print(n, n - 1, text_sym_spaced)
+
+    text_sym_spaced = text_sym_spaced.replace(
+        '"', "“"
+    )  # replace the rest with opening quotation
+
     text_list_sym_spaced = text_sym_spaced.split()
 
     # spaced symbols node
     # print(text_sym_spaced)
     # print(text_list_sym_spaced)
 
+    # space out mixed alphanumeric strings
+    text_alphanumeric_spaced = ""
+    for i in range(len(text_sym_spaced)):
+        if i < (len(text_sym_spaced) - 1):
+            if (
+                # character is digit, next is letter OR character is letter, next is digit
+                (text_sym_spaced[i].isdigit() and text_sym_spaced[i + 1].isalpha())
+                or (text_sym_spaced[i].isalpha() and text_sym_spaced[i + 1].isdigit())
+                # both are letters, first is lower, next is upper
+                or (
+                    (text_sym_spaced[i].isalpha() and text_sym_spaced[i].islower())
+                    and (
+                        text_sym_spaced[i + 1].isalpha()
+                        and text_sym_spaced[i + 1].isupper()
+                    )
+                )
+                # both are letters, first is upper, next is lower
+                or (
+                    (text_sym_spaced[i].isalpha() and text_sym_spaced[i].isupper())
+                    and (
+                        text_sym_spaced[i + 1].isalpha()
+                        and text_sym_spaced[i + 1].islower()
+                    )
+                )
+            ):
+                text_alphanumeric_spaced += f"{text_sym_spaced[i]} "
+            else:
+                text_alphanumeric_spaced += text_sym_spaced[i]
+        else:
+            text_alphanumeric_spaced += text_sym_spaced[i]
+
+    text_list_alphanumeric_spaced = text_alphanumeric_spaced.split()
+
+    # spaced symbols node
+    # print(text_alphanumeric_spaced)
+    # print(text_list_alphanumeric_spaced)
+
     # treat numbers first so we dont manipulate them later
     # numeric word first
     brailled_text_num_word = ""
-    for i in range(len(text_list_sym_spaced)):
-        if text_list_sym_spaced[i].isdigit():
-            # print(text[i])
-            # print(alphanumeric[f"{text[i]}"])
-            brailled_text_num_word += f" 001111 {text_list_sym_spaced[i]} "
+    for i in range(len(text_list_alphanumeric_spaced)):
+        if text_list_alphanumeric_spaced[i].isdigit():
+            brailled_text_num_word += f" 001111 {text_list_alphanumeric_spaced[i]} "
         else:
-            brailled_text_num_word += f" {text_list_sym_spaced[i]} "
+            brailled_text_num_word += f" {text_list_alphanumeric_spaced[i]} "
 
     text_list_num_word = brailled_text_num_word.split()
 
@@ -285,73 +337,28 @@ def display_braille(text):
         # print(brailled_text_contractions)
         # print(text_list_contractions)
 
-        # groupsigns dictionary
-        # list words, item by item
-        brailled_text_groupsigns_word = ""
-        for i in range(len(text_list_contractions)):
-            if (
-                text_list_contractions[i].isalpha()
-                and text_list_contractions[i] in groupsigns.keys()
-            ):
-                brailled_text_groupsigns_word += (
-                    f" {groupsigns.get(text_list_contractions[i])} "
-                )
-            else:
-                brailled_text_groupsigns_word += f" {text_list_contractions[i]} "
-
-        text_list_groupsigns_word = brailled_text_groupsigns_word.split()
-
-        # groupsigns word node
-        # print(brailled_text_groupsigns_word)
-        # print(text_list_groupsigns_word)
-
-        # now groupsigns substring check
-        brailled_text_groupsigns = ""
-        for i in range(len(text_list_groupsigns_word)):
-            # if any of the keys is a substring of the larger string, a list element
-            # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
-            matches = [
-                x for x in groupsigns.keys() if x in text_list_groupsigns_word[i]
-            ]
-            # print(matches)
-            if text_list_groupsigns_word[i].isalpha() and matches:
-                for j in range(len(matches)):
-                    # iterate through the match list, replace all instances of the substring with spaced out, shortform substring
-                    text_list_groupsigns_word[i] = text_list_groupsigns_word[i].replace(
-                        f"{matches[j]}", f" {groupsigns.get(matches[j])} "
-                    )
-                brailled_text_groupsigns += text_list_groupsigns_word[i]
-            else:
-                brailled_text_groupsigns += f" {text_list_groupsigns_word[i]} "
-
-        text_list_groupsigns = brailled_text_groupsigns.split()
-
-        # groupsigns node
-        # print(brailled_text_groupsigns)
-        # print(text_list_groupsigns)
-
         # groupsigns final dictionary
         # groupsigns final substring check only
         brailled_text_groupsigns_final = ""
-        for i in range(len(text_list_groupsigns)):
+        for i in range(len(text_list_contractions)):
             # if any of the keys is a substring of the larger string, a list element
             # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
             matches = [
-                x for x in groupsigns_final.keys() if x in text_list_groupsigns[i]
+                x for x in groupsigns_final.keys() if x in text_list_contractions[i]
             ]
             # print(matches)
-            if text_list_groupsigns[i].isalpha() and matches:
+            if text_list_contractions[i].isalpha() and matches:
                 for j in range(len(matches)):
                     if (
-                        text_list_groupsigns[i].startswith(matches[j]) == False
+                        text_list_contractions[i].startswith(matches[j]) == False
                     ):  # if string does not start with matched substring
                         # iterate through the match list, replace all instances of the substring with spaced out, shortform substring
-                        text_list_groupsigns[i] = text_list_groupsigns[i].replace(
+                        text_list_contractions[i] = text_list_contractions[i].replace(
                             f"{matches[j]}", f" {groupsigns_final.get(matches[j])} "
                         )
-                brailled_text_groupsigns_final += text_list_groupsigns[i]
+                brailled_text_groupsigns_final += text_list_contractions[i]
             else:
-                brailled_text_groupsigns_final += f" {text_list_groupsigns[i]} "
+                brailled_text_groupsigns_final += f" {text_list_contractions[i]} "
 
         text_list_groupsigns_final = brailled_text_groupsigns_final.split()
 
@@ -359,19 +366,68 @@ def display_braille(text):
         # print(brailled_text_groupsigns_final)
         # print(text_list_groupsigns_final)
 
+        # groupsigns dictionary
+        # groupsigns do not use word check
+        # # list words, item by item
+        # brailled_text_groupsigns_word = ""
+        # for i in range(len(text_list_groupsigns_final)):
+        #     if (
+        #         text_list_groupsigns_final[i].isalpha()
+        #         and text_list_groupsigns_final[i] in groupsigns.keys()
+        #     ):
+        #         brailled_text_groupsigns_word += (
+        #             f" {groupsigns.get(text_list_groupsigns_final[i])} "
+        #         )
+        #     else:
+        #         brailled_text_groupsigns_word += f" {text_list_groupsigns_final[i]} "
+
+        # text_list_groupsigns_word = brailled_text_groupsigns_word.split()
+
+        # # groupsigns word node
+        # # print(brailled_text_groupsigns_word)
+        # # print(text_list_groupsigns_word)
+
+        # now groupsigns substring check
+        brailled_text_groupsigns = ""
+        for i in range(len(text_list_groupsigns_final)):
+            # if any of the keys is a substring of the larger string, a list element
+            # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
+            matches = [
+                x for x in groupsigns.keys() if x in text_list_groupsigns_final[i]
+            ]
+            # print(matches)
+            if text_list_groupsigns_final[i].isalpha() and matches:
+                for j in range(len(matches)):
+                    if (
+                        text_list_groupsigns_final[i] != matches[j]
+                    ):  # if string does not equal to matched substring
+                        # iterate through the match list, replace all instances of the substring with spaced out, shortform substring
+                        text_list_groupsigns_final[i] = text_list_groupsigns_final[
+                            i
+                        ].replace(f"{matches[j]}", f" {groupsigns.get(matches[j])} ")
+                brailled_text_groupsigns += text_list_groupsigns_final[i]
+            else:
+                brailled_text_groupsigns += f" {text_list_groupsigns_final[i]} "
+
+        text_list_groupsigns = brailled_text_groupsigns.split()
+
+        # groupsigns node
+        # print(brailled_text_groupsigns)
+        # print(text_list_groupsigns)
+
         # individual letter decompile
         brailled_text = ""
-        for i in range(len(brailled_text_groupsigns_final)):
+        for i in range(len(brailled_text_groupsigns)):
             if (  # letters in alphanumeric dictionary
-                brailled_text_groupsigns_final[i] in alphanumeric.keys()
-                and brailled_text_groupsigns_final[i].isalpha()
+                brailled_text_groupsigns[i] in alphanumeric.keys()
+                and brailled_text_groupsigns[i].isalpha()
             ):
-                brailled_text += alphanumeric.get(brailled_text_groupsigns_final[i])
+                brailled_text += alphanumeric.get(brailled_text_groupsigns[i])
             elif (  # 6 digit numbers and whitespace since whitespace don't hurt
-                brailled_text_groupsigns_final[i].isdigit()
-                or brailled_text_groupsigns_final[i] == " "
+                brailled_text_groupsigns[i].isdigit()
+                or brailled_text_groupsigns[i] == " "
             ):
-                brailled_text += brailled_text_groupsigns_final[i]
+                brailled_text += brailled_text_groupsigns[i]
             else:  # any other unrecognisable character
                 brailled_text += " 000000 "
         brailled_list = brailled_text.split()
@@ -387,8 +443,14 @@ def display_braille(text):
     braille_text_1 = ""
     braille_text_2 = ""
     braille_text_3 = ""
+    braille_unicode_spaced = ""
+    braille_unicode = ""
+
     # Display brailled list
     for i in range(len(brailled_list)):  # each list element, a 6 digit code
+        if brailled_list[i] in unicode.keys():
+            braille_unicode += f"{unicode.get(brailled_list[i])}"
+            braille_unicode_spaced += f"  {unicode.get(brailled_list[i])}  "
         for j in range(len(brailled_list[i])):  # iterate through 6 digit code element
             br[j + 1] = brailled_list[i][j]
 
@@ -403,7 +465,7 @@ def display_braille(text):
         sleep(timer)
 
     # braille text node
-    print(f"Text:\n{text}")
+    print(f"Text:\n{text}\n")
     if grade1:
         print("Grade 1 Uncontracted Braille:")
     else:
@@ -411,11 +473,10 @@ def display_braille(text):
     print(braille_text_1)
     print(braille_text_2)
     print(braille_text_3)
+    print(braille_unicode_spaced)
+    print("")
+    print(braille_unicode)
 
 
 text = input("Enter the text you want to convert to Braille: ")
 display_braille(text)
-
-# Some examples
-# display_braille("ME-499 Final-Year Project (6CH) (90) (A)")
-# display_braille("The quick brown fox jumps over a lazy dog.")
