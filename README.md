@@ -1,2 +1,2 @@
 # Text to Braille
-## precursor to mtalirfan/ME-499-Final-Year-Project
+## candidate for mtalirfan/ME-499-Final-Year-Project
