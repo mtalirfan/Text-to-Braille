@@ -18,6 +18,7 @@ timer = 0  # seconds between displays
 
 
 def toggle_grade():
+    """Toggle between Grade 1 and Grade 2 Braille. Default to Grade 2 Contracted Braille."""
     global grade1
     grade1_input = input(
         "Default to Grade 2 Contracted Braille. Toggle to Grade 1 Uncontracted Braille? (y/n): "
@@ -28,10 +29,7 @@ def toggle_grade():
         grade1 = False
 
 
-toggle_grade()
-
-
-def display_braille(text):
+def process_text_to_braille(text):
 
     # print(text)
 
@@ -366,27 +364,6 @@ def display_braille(text):
         # print(brailled_text_groupsigns_final)
         # print(text_list_groupsigns_final)
 
-        # groupsigns dictionary
-        # groupsigns do not use word check
-        # # list words, item by item
-        # brailled_text_groupsigns_word = ""
-        # for i in range(len(text_list_groupsigns_final)):
-        #     if (
-        #         text_list_groupsigns_final[i].isalpha()
-        #         and text_list_groupsigns_final[i] in groupsigns.keys()
-        #     ):
-        #         brailled_text_groupsigns_word += (
-        #             f" {groupsigns.get(text_list_groupsigns_final[i])} "
-        #         )
-        #     else:
-        #         brailled_text_groupsigns_word += f" {text_list_groupsigns_final[i]} "
-
-        # text_list_groupsigns_word = brailled_text_groupsigns_word.split()
-
-        # # groupsigns word node
-        # # print(brailled_text_groupsigns_word)
-        # # print(text_list_groupsigns_word)
-
         # now groupsigns substring check
         brailled_text_groupsigns = ""
         for i in range(len(text_list_groupsigns_final)):
@@ -430,7 +407,6 @@ def display_braille(text):
                 brailled_text += brailled_text_groupsigns[i]
             else:  # any other unrecognisable character
                 brailled_text += " 000000 "
-        brailled_list = brailled_text.split()
 
         # grade 2 brailled node
         # print(brailled_text)
@@ -438,7 +414,13 @@ def display_braille(text):
 
     # brailled node
     # print(brailled_text)
-    # print(brailled_list)
+
+    return brailled_text
+
+
+def display_braille(brailled_text):
+    """Takes processed text that has been converted to braille and displays it in braille format."""
+    brailled_list = brailled_text.split()
 
     braille_text_1 = ""
     braille_text_2 = ""
@@ -478,5 +460,7 @@ def display_braille(text):
     print(braille_unicode)
 
 
+toggle_grade()
+
 text = input("Enter the text you want to convert to Braille: ")
-display_braille(text)
+display_braille(process_text_to_braille(text))
