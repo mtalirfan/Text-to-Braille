@@ -19,6 +19,7 @@ timer = 0  # seconds between displays
 
 def toggle_grade():
     """Toggle between Grade 1 and Grade 2 Braille. Default to Grade 2 Contracted Braille."""
+
     global grade1
     grade1_input = input(
         "Default to Grade 2 Contracted Braille. Toggle to Grade 1 Uncontracted Braille? (y/n): "
@@ -29,14 +30,11 @@ def toggle_grade():
         grade1 = False
 
 
-def process_text_to_braille(text):
+def space_out_symbols_punctuation(text):
+    """space out symbols and punctuation, convert spaces to empty character ‎"""
 
     # print(text)
 
-    global grade1
-
-    # for both grade 1 and 2
-    # space out symbols and punctuation, convert spaces to empty character ‎
     text_sym_spaced = ""
     for i in range(len(text)):
         if text[i] == " ":
@@ -62,13 +60,16 @@ def process_text_to_braille(text):
         '"', "“"
     )  # replace the rest with opening quotation
 
-    text_list_sym_spaced = text_sym_spaced.split()
-
     # spaced symbols node
     # print(text_sym_spaced)
-    # print(text_list_sym_spaced)
 
-    # space out mixed alphanumeric strings
+    return text_sym_spaced
+
+
+def space_out_alphanumeric(text_sym_spaced):
+    """space out mixed alphanumeric strings"""
+    text_list_sym_spaced = text_sym_spaced.split()
+
     text_alphanumeric_spaced = ""
     for i in range(len(text_sym_spaced)):
         if i < (len(text_sym_spaced) - 1):
@@ -76,22 +77,22 @@ def process_text_to_braille(text):
                 # character is digit, next is letter OR character is letter, next is digit
                 (text_sym_spaced[i].isdigit() and text_sym_spaced[i + 1].isalpha())
                 or (text_sym_spaced[i].isalpha() and text_sym_spaced[i + 1].isdigit())
-                # both are letters, first is lower, next is upper
-                or (
-                    (text_sym_spaced[i].isalpha() and text_sym_spaced[i].islower())
-                    and (
-                        text_sym_spaced[i + 1].isalpha()
-                        and text_sym_spaced[i + 1].isupper()
-                    )
-                )
-                # both are letters, first is upper, next is lower
-                or (
-                    (text_sym_spaced[i].isalpha() and text_sym_spaced[i].isupper())
-                    and (
-                        text_sym_spaced[i + 1].isalpha()
-                        and text_sym_spaced[i + 1].islower()
-                    )
-                )
+                # # both are letters, first is lower, next is upper
+                # or (
+                #     (text_sym_spaced[i].isalpha() and text_sym_spaced[i].islower())
+                #     and (
+                #         text_sym_spaced[i + 1].isalpha()
+                #         and text_sym_spaced[i + 1].isupper()
+                #     )
+                # )
+                # # both are letters, first is upper, next is lower
+                # or (
+                #     (text_sym_spaced[i].isalpha() and text_sym_spaced[i].isupper())
+                #     and (
+                #         text_sym_spaced[i + 1].isalpha()
+                #         and text_sym_spaced[i + 1].islower()
+                #     )
+                # )
             ):
                 text_alphanumeric_spaced += f"{text_sym_spaced[i]} "
             else:
@@ -99,13 +100,17 @@ def process_text_to_braille(text):
         else:
             text_alphanumeric_spaced += text_sym_spaced[i]
 
-    text_list_alphanumeric_spaced = text_alphanumeric_spaced.split()
-
     # spaced symbols node
     # print(text_alphanumeric_spaced)
-    # print(text_list_alphanumeric_spaced)
 
-    # treat numbers first so we dont manipulate them later
+    return text_alphanumeric_spaced
+
+
+def convert_numeric_word(text_alphanumeric_spaced):
+    """treat numbers first so we dont manipulate them later"""
+
+    text_list_alphanumeric_spaced = text_alphanumeric_spaced.split()
+
     # numeric word first
     brailled_text_num_word = ""
     for i in range(len(text_list_alphanumeric_spaced)):
@@ -114,11 +119,16 @@ def process_text_to_braille(text):
         else:
             brailled_text_num_word += f" {text_list_alphanumeric_spaced[i]} "
 
-    text_list_num_word = brailled_text_num_word.split()
-
     # number word node
     # print(brailled_text_num_word)
-    # print(text_list_num_word)
+
+    return brailled_text_num_word
+
+
+def convert_numeric_character(brailled_text_num_word):
+    """treat numbers character by character"""
+
+    text_list_num_word = brailled_text_num_word.split()
 
     # now number character by character
     brailled_text_num = ""
@@ -152,11 +162,16 @@ def process_text_to_braille(text):
                     else:
                         brailled_text_num += f"{text_list_num_word[i]}"
 
-    text_list_num = brailled_text_num.split()
-
     # number node
     # print(brailled_text_num)
-    # print(text_list_num)
+
+    return brailled_text_num
+
+
+def convert_symbols_punctuation(brailled_text_num):
+    """treat symbols/punctuation now, simple conversion to braille"""
+
+    text_list_num = brailled_text_num.split()
 
     # treat symbols/punctuation now, simple conversion to braille
     brailled_text_sym = ""
@@ -168,11 +183,16 @@ def process_text_to_braille(text):
         else:
             brailled_text_sym += brailled_text_num[i]
 
-    text_list_sym = brailled_text_sym.split()
-
     # symbol node
     # print(brailled_text_sym)
-    # print(text_list_sym)
+
+    return brailled_text_sym
+
+
+def convert_capital(brailled_text_sym):
+    """treat capitals next, add 000001 before and convert to lower, will do shorthand conversion later"""
+
+    text_list_sym = brailled_text_sym.split()
 
     # treat capitals next, add 000001 before and convert to lower, will do shorthand conversion later
 
@@ -196,223 +216,256 @@ def process_text_to_braille(text):
         if brailled_text_caps_word[i].isupper():
             brailled_text_caps += f" 000001 {brailled_text_caps_word[i].lower()}"
         else:
-            brailled_text_caps += brailled_text_caps_word[i]
-
-    text_list_caps = brailled_text_caps.split()
+            brailled_text_caps += f"{brailled_text_caps_word[i]}"
 
     # caps node
     # print(brailled_text_caps)
-    # print(text_list_caps)
 
-    # Finally lowercase, changing to shorthand and then braille from dictionaries
+    return brailled_text_caps
 
-    if grade1:  # handle lowercase in grade 1
 
-        # individual letter decompile
-        brailled_text = ""
-        for i in range(len(brailled_text_caps)):
-            if (  # letters in alphanumeric dictionary
-                brailled_text_caps[i] in alphanumeric.keys()
-                and brailled_text_caps[i].isalpha()
-            ):
-                brailled_text += alphanumeric.get(brailled_text_caps[i])
-            elif (  # 6 digit numbers and whitespace since whitespace don't hurt
-                brailled_text_caps[i].isdigit() or brailled_text_caps[i] == " "
-            ):
-                brailled_text += brailled_text_caps[i]
-            else:  # any other unrecognisable character
-                brailled_text += " 000000 "
-        brailled_list = brailled_text.split()
+# Finally lowercase, changing to shorthand and then braille from dictionaries
 
-        # grade 1 brailled node
-        # print(brailled_text)
-        # print(brailled_list)
 
-    else:  # handle lowercase in grade 2
+def convert_lowercase_grade1(brailled_text_caps):
+    """grade 1 individual letter decompile"""
 
-        # wordsigns, only word check from wordsign dictionary
-        # list words, item by item
-        brailled_text_wordsigns = ""
-        for i in range(len(text_list_caps)):
-            if text_list_caps[i].isalpha() and text_list_caps[i] in wordsigns.keys():
-                brailled_text_wordsigns += f" {wordsigns.get(text_list_caps[i])} "
-            else:
-                brailled_text_wordsigns += f" {text_list_caps[i]} "
+    text_list_caps = brailled_text_caps.split()
 
-        text_list_wordsigns = brailled_text_wordsigns.split()
+    # individual letter decompile
+    brailled_text = ""
+    for i in range(len(brailled_text_caps)):
+        if (  # letters in alphanumeric dictionary
+            brailled_text_caps[i] in alphanumeric.keys()
+            and brailled_text_caps[i].isalpha()
+        ):
+            brailled_text += alphanumeric.get(brailled_text_caps[i])
+        elif (  # 6 digit numbers and whitespace since whitespace don't hurt
+            brailled_text_caps[i].isdigit() or brailled_text_caps[i] == " "
+        ):
+            brailled_text += brailled_text_caps[i]
+        else:  # any other unrecognisable character
+            brailled_text += " 000000 "
 
-        # wordsigns node
-        # print(brailled_text_wordsigns)
-        # print(text_list_wordsigns)
+    # grade 1 brailled node
+    # print(brailled_text)
 
-        # short forms dictionary
-        # list words, item by item
-        brailled_text_shortforms_word = ""
-        for i in range(len(text_list_wordsigns)):
-            if (
-                text_list_wordsigns[i].isalpha()
-                and text_list_wordsigns[i] in shortforms.keys()
-            ):
-                brailled_text_shortforms_word += (
-                    f" {shortforms.get(text_list_wordsigns[i])} "
+    return brailled_text
+
+
+def convert_lowercase_grade2_wordsigns(brailled_text_caps):
+    """wordsigns, only word check from wordsign dictionary
+    list words, item by item
+    """
+
+    text_list_caps = brailled_text_caps.split()
+
+    # wordsigns, only word check from wordsign dictionary
+    # list words, item by item
+    brailled_text_wordsigns = ""
+    for i in range(len(text_list_caps)):
+        if text_list_caps[i].isalpha() and text_list_caps[i] in wordsigns.keys():
+            brailled_text_wordsigns += f" {wordsigns.get(text_list_caps[i])} "
+        else:
+            brailled_text_wordsigns += f" {text_list_caps[i]} "
+
+    # wordsigns node
+    # print(brailled_text_wordsigns)
+
+    return brailled_text_wordsigns
+
+
+def convert_lowercase_grade2_shortforms_word(brailled_text_wordsigns):
+    """short forms dictionary
+    list words, item by item
+    """
+    text_list_wordsigns = brailled_text_wordsigns.split()
+
+    # short forms dictionary
+    # list words, item by item
+    brailled_text_shortforms_word = ""
+    for i in range(len(text_list_wordsigns)):
+        if (
+            text_list_wordsigns[i].isalpha()
+            and text_list_wordsigns[i] in shortforms.keys()
+        ):
+            brailled_text_shortforms_word += (
+                f" {shortforms.get(text_list_wordsigns[i])} "
+            )
+        else:
+            brailled_text_shortforms_word += f" {text_list_wordsigns[i]} "
+
+    # shortforms word node
+    # print(brailled_text_shortforms_word)
+
+    return brailled_text_shortforms_word
+
+
+def convert_lowercase_grade2_shortforms_substring(brailled_text_shortforms_word):
+    """shortforms substring check"""
+    text_list_shortforms_word = brailled_text_shortforms_word.split()
+
+    # now shortforms substring check
+    brailled_text_shortforms = ""
+    for i in range(len(text_list_shortforms_word)):
+        # if any of the keys is a substring of the larger string, a list element
+        # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
+        matches = [x for x in shortforms.keys() if x in text_list_shortforms_word[i]]
+        # print(matches)
+        if text_list_shortforms_word[i].isalpha() and matches:
+            for j in range(len(matches)):
+                # iterate through the match list, replace all instances of the substring with spaced out, shortform substring
+                text_list_shortforms_word[i] = text_list_shortforms_word[i].replace(
+                    f"{matches[j]}", f" {shortforms.get(matches[j])} "
                 )
-            else:
-                brailled_text_shortforms_word += f" {text_list_wordsigns[i]} "
+            brailled_text_shortforms += text_list_shortforms_word[i]
+        else:
+            brailled_text_shortforms += f" {text_list_shortforms_word[i]} "
 
-        text_list_shortforms_word = brailled_text_shortforms_word.split()
+    # shortforms node
+    # print(brailled_text_shortforms)
 
-        # shortforms word node
-        # print(brailled_text_shortforms_word)
-        # print(text_list_shortforms_word)
+    return brailled_text_shortforms
 
-        # now shortforms substring check
-        brailled_text_shortforms = ""
-        for i in range(len(text_list_shortforms_word)):
-            # if any of the keys is a substring of the larger string, a list element
-            # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
-            matches = [
-                x for x in shortforms.keys() if x in text_list_shortforms_word[i]
-            ]
-            # print(matches)
-            if text_list_shortforms_word[i].isalpha() and matches:
-                for j in range(len(matches)):
+
+def convert_lowercase_grade2_contractions_word(brailled_text_shortforms):
+    """contractions dictionary
+    list words, item by item
+    """
+    text_list_shortforms = brailled_text_shortforms.split()
+
+    # contractions dictionary
+    # list words, item by item
+    brailled_text_contractions_word = ""
+    for i in range(len(text_list_shortforms)):
+        if (
+            text_list_shortforms[i].isalpha()
+            and text_list_shortforms[i] in contractions.keys()
+        ):
+            brailled_text_contractions_word += (
+                f" {contractions.get(text_list_shortforms[i])} "
+            )
+        else:
+            brailled_text_contractions_word += f" {text_list_shortforms[i]} "
+
+    # contractions word node
+    # print(brailled_text_contractions_word)
+
+    return brailled_text_contractions_word
+
+
+def convert_lowercase_grade2_contractions_substring(brailled_text_contractions_word):
+    """contractions substring check"""
+    text_list_contractions_word = brailled_text_contractions_word.split()
+
+    # now contractions substring check
+    brailled_text_contractions = ""
+    for i in range(len(text_list_contractions_word)):
+        # if any of the keys is a substring of the larger string, a list element
+        # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
+        matches = [
+            x for x in contractions.keys() if x in text_list_contractions_word[i]
+        ]
+        # print(matches)
+        if text_list_contractions_word[i].isalpha() and matches:
+            for j in range(len(matches)):
+                # iterate through the match list, replace all instances of the substring with spaced out, shortform substring
+                text_list_contractions_word[i] = text_list_contractions_word[i].replace(
+                    f"{matches[j]}", f" {contractions.get(matches[j])} "
+                )
+            brailled_text_contractions += text_list_contractions_word[i]
+        else:
+            brailled_text_contractions += f" {text_list_contractions_word[i]} "
+
+    # contractions node
+    # print(brailled_text_contractions)
+
+    return brailled_text_contractions
+
+
+def convert_lowercase_grade2_groupsigns_final(brailled_text_contractions):
+    """groupsigns final dictionary
+    groupsigns final substring check only
+    """
+    text_list_contractions = brailled_text_contractions.split()
+
+    # groupsigns final dictionary
+    # groupsigns final substring check only
+    brailled_text_groupsigns_final = ""
+    for i in range(len(text_list_contractions)):
+        # if any of the keys is a substring of the larger string, a list element
+        # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
+        matches = [x for x in groupsigns_final.keys() if x in text_list_contractions[i]]
+        # print(matches)
+        if text_list_contractions[i].isalpha() and matches:
+            for j in range(len(matches)):
+                if (
+                    text_list_contractions[i].startswith(matches[j]) == False
+                ):  # if string does not start with matched substring
                     # iterate through the match list, replace all instances of the substring with spaced out, shortform substring
-                    text_list_shortforms_word[i] = text_list_shortforms_word[i].replace(
-                        f"{matches[j]}", f" {shortforms.get(matches[j])} "
+                    text_list_contractions[i] = text_list_contractions[i].replace(
+                        f"{matches[j]}", f" {groupsigns_final.get(matches[j])} "
                     )
-                brailled_text_shortforms += text_list_shortforms_word[i]
-            else:
-                brailled_text_shortforms += f" {text_list_shortforms_word[i]} "
+            brailled_text_groupsigns_final += text_list_contractions[i]
+        else:
+            brailled_text_groupsigns_final += f" {text_list_contractions[i]} "
 
-        text_list_shortforms = brailled_text_shortforms.split()
+    # groupsigns final node
+    # print(brailled_text_groupsigns_final)
 
-        # shortforms node
-        # print(brailled_text_shortforms)
-        # print(text_list_shortforms)
+    return brailled_text_groupsigns_final
 
-        # contractions dictionary
-        # list words, item by item
-        brailled_text_contractions_word = ""
-        for i in range(len(text_list_shortforms)):
-            if (
-                text_list_shortforms[i].isalpha()
-                and text_list_shortforms[i] in contractions.keys()
-            ):
-                brailled_text_contractions_word += (
-                    f" {contractions.get(text_list_shortforms[i])} "
-                )
-            else:
-                brailled_text_contractions_word += f" {text_list_shortforms[i]} "
 
-        text_list_contractions_word = brailled_text_contractions_word.split()
+def convert_lowercase_grade2_groupsigns_substring(brailled_text_groupsigns_final):
+    """groupsigns substring check"""
+    text_list_groupsigns_final = brailled_text_groupsigns_final.split()
 
-        # contractions word node
-        # print(brailled_text_contractions_word)
-        # print(text_list_contractions_word)
-
-        # now contractions substring check
-        brailled_text_contractions = ""
-        for i in range(len(text_list_contractions_word)):
-            # if any of the keys is a substring of the larger string, a list element
-            # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
-            matches = [
-                x for x in contractions.keys() if x in text_list_contractions_word[i]
-            ]
-            # print(matches)
-            if text_list_contractions_word[i].isalpha() and matches:
-                for j in range(len(matches)):
+    # now groupsigns substring check
+    brailled_text_groupsigns = ""
+    for i in range(len(text_list_groupsigns_final)):
+        # if any of the keys is a substring of the larger string, a list element
+        # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
+        matches = [x for x in groupsigns.keys() if x in text_list_groupsigns_final[i]]
+        # print(matches)
+        if text_list_groupsigns_final[i].isalpha() and matches:
+            for j in range(len(matches)):
+                if (
+                    text_list_groupsigns_final[i] != matches[j]
+                ):  # if string does not equal to matched substring
                     # iterate through the match list, replace all instances of the substring with spaced out, shortform substring
-                    text_list_contractions_word[i] = text_list_contractions_word[
+                    text_list_groupsigns_final[i] = text_list_groupsigns_final[
                         i
-                    ].replace(f"{matches[j]}", f" {contractions.get(matches[j])} ")
-                brailled_text_contractions += text_list_contractions_word[i]
-            else:
-                brailled_text_contractions += f" {text_list_contractions_word[i]} "
+                    ].replace(f"{matches[j]}", f" {groupsigns.get(matches[j])} ")
+            brailled_text_groupsigns += text_list_groupsigns_final[i]
+        else:
+            brailled_text_groupsigns += f" {text_list_groupsigns_final[i]} "
 
-        text_list_contractions = brailled_text_contractions.split()
+    # groupsigns node
+    # print(brailled_text_groupsigns)
 
-        # contractions node
-        # print(brailled_text_contractions)
-        # print(text_list_contractions)
+    return brailled_text_groupsigns
 
-        # groupsigns final dictionary
-        # groupsigns final substring check only
-        brailled_text_groupsigns_final = ""
-        for i in range(len(text_list_contractions)):
-            # if any of the keys is a substring of the larger string, a list element
-            # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
-            matches = [
-                x for x in groupsigns_final.keys() if x in text_list_contractions[i]
-            ]
-            # print(matches)
-            if text_list_contractions[i].isalpha() and matches:
-                for j in range(len(matches)):
-                    if (
-                        text_list_contractions[i].startswith(matches[j]) == False
-                    ):  # if string does not start with matched substring
-                        # iterate through the match list, replace all instances of the substring with spaced out, shortform substring
-                        text_list_contractions[i] = text_list_contractions[i].replace(
-                            f"{matches[j]}", f" {groupsigns_final.get(matches[j])} "
-                        )
-                brailled_text_groupsigns_final += text_list_contractions[i]
-            else:
-                brailled_text_groupsigns_final += f" {text_list_contractions[i]} "
 
-        text_list_groupsigns_final = brailled_text_groupsigns_final.split()
+def convert_lowercase_grade2_decompile_character(brailled_text_groupsigns):
+    """individual letter decompile"""
+    text_list_groupsigns = brailled_text_groupsigns.split()
 
-        # groupsigns final node
-        # print(brailled_text_groupsigns_final)
-        # print(text_list_groupsigns_final)
+    # individual letter decompile
+    brailled_text = ""
+    for i in range(len(brailled_text_groupsigns)):
+        if (  # letters in alphanumeric dictionary
+            brailled_text_groupsigns[i] in alphanumeric.keys()
+            and brailled_text_groupsigns[i].isalpha()
+        ):
+            brailled_text += alphanumeric.get(brailled_text_groupsigns[i])
+        elif (  # 6 digit numbers and whitespace since whitespace don't hurt
+            brailled_text_groupsigns[i].isdigit() or brailled_text_groupsigns[i] == " "
+        ):
+            brailled_text += brailled_text_groupsigns[i]
+        else:  # any other unrecognisable character
+            brailled_text += " 000000 "
 
-        # now groupsigns substring check
-        brailled_text_groupsigns = ""
-        for i in range(len(text_list_groupsigns_final)):
-            # if any of the keys is a substring of the larger string, a list element
-            # iteration preference determined by elements in match list, which are determined by appearance order in dictionary
-            matches = [
-                x for x in groupsigns.keys() if x in text_list_groupsigns_final[i]
-            ]
-            # print(matches)
-            if text_list_groupsigns_final[i].isalpha() and matches:
-                for j in range(len(matches)):
-                    if (
-                        text_list_groupsigns_final[i] != matches[j]
-                    ):  # if string does not equal to matched substring
-                        # iterate through the match list, replace all instances of the substring with spaced out, shortform substring
-                        text_list_groupsigns_final[i] = text_list_groupsigns_final[
-                            i
-                        ].replace(f"{matches[j]}", f" {groupsigns.get(matches[j])} ")
-                brailled_text_groupsigns += text_list_groupsigns_final[i]
-            else:
-                brailled_text_groupsigns += f" {text_list_groupsigns_final[i]} "
-
-        text_list_groupsigns = brailled_text_groupsigns.split()
-
-        # groupsigns node
-        # print(brailled_text_groupsigns)
-        # print(text_list_groupsigns)
-
-        # individual letter decompile
-        brailled_text = ""
-        for i in range(len(brailled_text_groupsigns)):
-            if (  # letters in alphanumeric dictionary
-                brailled_text_groupsigns[i] in alphanumeric.keys()
-                and brailled_text_groupsigns[i].isalpha()
-            ):
-                brailled_text += alphanumeric.get(brailled_text_groupsigns[i])
-            elif (  # 6 digit numbers and whitespace since whitespace don't hurt
-                brailled_text_groupsigns[i].isdigit()
-                or brailled_text_groupsigns[i] == " "
-            ):
-                brailled_text += brailled_text_groupsigns[i]
-            else:  # any other unrecognisable character
-                brailled_text += " 000000 "
-
-        # grade 2 brailled node
-        # print(brailled_text)
-        # print(brailled_list)
-
-    # brailled node
+    # grade 2 brailled node
     # print(brailled_text)
 
     return brailled_text
@@ -420,6 +473,7 @@ def process_text_to_braille(text):
 
 def display_braille(brailled_text):
     """Takes processed text that has been converted to braille and displays it in braille format."""
+
     brailled_list = brailled_text.split()
 
     braille_text_1 = ""
@@ -460,7 +514,64 @@ def display_braille(brailled_text):
     print(braille_unicode)
 
 
+# Input
 toggle_grade()
-
 text = input("Enter the text you want to convert to Braille: ")
-display_braille(process_text_to_braille(text))
+
+# Process
+text_sym_spaced = space_out_symbols_punctuation(text)
+text_alphanumeric_spaced = space_out_alphanumeric(text_sym_spaced)
+brailled_text_num_word = convert_numeric_word(text_alphanumeric_spaced)
+brailled_text_num = convert_numeric_character(brailled_text_num_word)
+brailled_text_sym = convert_symbols_punctuation(brailled_text_num)
+brailled_text_caps = convert_capital(brailled_text_sym)
+
+# lowercase conversion
+if grade1:
+    brailled_text = convert_lowercase_grade1(brailled_text_caps)
+else:  # grade 2
+    brailled_text_wordsigns = convert_lowercase_grade2_wordsigns(brailled_text_caps)
+    brailled_text_shortforms_word = convert_lowercase_grade2_shortforms_word(
+        brailled_text_wordsigns
+    )
+    brailled_text_shortforms = convert_lowercase_grade2_shortforms_substring(
+        brailled_text_shortforms_word
+    )
+    brailled_text_contractions_word = convert_lowercase_grade2_contractions_word(
+        brailled_text_shortforms
+    )
+    brailled_text_contractions = convert_lowercase_grade2_contractions_substring(
+        brailled_text_contractions_word
+    )
+    brailled_text_groupsigns_final = convert_lowercase_grade2_groupsigns_final(
+        brailled_text_contractions
+    )
+    brailled_text_groupsigns = convert_lowercase_grade2_groupsigns_substring(
+        brailled_text_groupsigns_final
+    )
+    brailled_text = convert_lowercase_grade2_decompile_character(
+        brailled_text_groupsigns
+    )
+
+# Output
+display_braille(brailled_text)
+
+
+# # Debug
+# print(text_sym_spaced, text_sym_spaced.split())
+# print(text_alphanumeric_spaced, text_alphanumeric_spaced.split())
+# print(brailled_text_num_word, brailled_text_num_word.split())
+# print(brailled_text_num, brailled_text_num.split())
+# print(brailled_text_sym, brailled_text_sym.split())
+# print(brailled_text_caps, brailled_text_caps.split())
+# if grade1:
+#     print(brailled_text, brailled_text.split())
+# else:
+#     print(brailled_text_wordsigns, brailled_text_wordsigns.split())
+#     print(brailled_text_shortforms_word, brailled_text_shortforms_word.split())
+#     print(brailled_text_shortforms, brailled_text_shortforms.split())
+#     print(brailled_text_contractions_word, brailled_text_contractions_word.split())
+#     print(brailled_text_contractions, brailled_text_contractions.split())
+#     print(brailled_text_groupsigns_final, brailled_text_groupsigns_final.split())
+#     print(brailled_text_groupsigns, brailled_text_groupsigns.split())
+#     print(brailled_text, brailled_text.split())

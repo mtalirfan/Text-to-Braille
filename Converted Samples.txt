@@ -36,7 +36,6 @@ Grade 1 Uncontracted Braille:
 ⠠⠞⠓⠑⠀⠟⠥⠊⠉⠅⠀⠃⠗⠕⠺⠝⠀⠋⠕⠭⠀⠚⠥⠍⠏⠎⠀⠕⠧⠑⠗⠀⠁⠀⠇⠁⠵⠽⠀⠙⠕⠛⠲
 ⠠⠞⠓⠑⠀⠟⠥⠊⠉⠅⠀⠃⠗⠕⠺⠝⠀⠋⠕⠭⠀⠚⠥⠍⠏⠎⠀⠕⠧⠑⠗⠀⠁⠀⠇⠁⠵⠽⠀⠙⠕⠛⠲
 
-
 Text:
 The quick brown fox jumps over a lazy dog.
 
@@ -48,7 +47,7 @@ Grade 2 Contracted Braille:
 
 ⠠⠮⠀⠟⠅⠀⠃⠗⠪⠝⠀⠋⠕⠭⠀⠚⠥⠍⠏⠎⠀⠕⠧⠻⠀⠁⠀⠇⠁⠵⠽⠀⠙⠕⠛⠲
 ⠠⠮⠀⠟⠅⠀⠃⠗⠪⠝⠀⠋⠕⠭⠀⠚⠥⠍⠏⠎⠀⠕⠧⠻⠀⠁⠀⠇⠁⠵⠽⠀⠙⠕⠛⠲
-
+⠠⠞⠓⠑⠀⠟⠅⠀⠃⠗⠪⠝⠀⠋⠕⠭⠀⠚⠥⠍⠏⠎⠀⠕⠧⠻⠀⠁⠀⠇⠁⠵⠽⠀⠙⠕⠛⠲
 
 WORDSIGNS
 
@@ -144,8 +143,6 @@ Grade 2 Contracted Braille:
 ⠠⠋⠁⠉⠞⠀⠠⠡⠑⠉⠅⠒⠀⠠⠝⠕⠂⠀⠠⠁⠀⠠⠝⠑⠺⠀⠠⠌⠥⠙⠽⠀⠠⠙⠕⠑⠎⠀⠠⠝⠀⠠⠩⠪⠀⠦⠠⠆⠬⠀⠠⠞⠗⠁⠝⠎⠀⠠⠊⠎⠀⠠⠚⠀⠠⠁⠀⠠⠏⠓⠁⠎⠑⠴
 ⠠⠋⠁⠉⠞⠀⠠⠡⠑⠉⠅⠒⠀⠠⠝⠕⠂⠀⠠⠁⠀⠠⠝⠑⠺⠀⠠⠌⠥⠙⠽⠀⠠⠙⠕⠑⠎⠀⠠⠝⠀⠠⠩⠪⠀⠦⠠⠆⠬⠀⠠⠞⠗⠁⠝⠎⠀⠠⠊⠎⠀⠠⠚⠀⠠⠁⠀⠠⠏⠓⠁⠎⠑⠴
 
-
-
 Text:
 if a beautiful trans woman was absolutely demolishing a pizza in front of me i too would be enraptured
 
@@ -170,7 +167,6 @@ Grade 2 Contracted Braille:
 
 ⠠⠅⠑⠑⠏⠠⠞⠗⠁⠝⠎⠠⠅⠊⠙⠎⠠⠎⠁⠋⠑⠠⠁⠞⠠⠎⠡⠕⠕⠇
 ⠠⠅⠑⠑⠏⠠⠞⠗⠁⠝⠎⠠⠅⠊⠙⠎⠠⠎⠁⠋⠑⠠⠁⠞⠠⠎⠡⠕⠕⠇
-
 
 Text:
 Cuando llegan a la granja se encuentran con Ignacio el Ganso. Está leyéndole poesía a la Palomita Rita. “¡Hola a todos!” dice Ignacio el Ganso. “¿Dónde van? ¿Por qué están tan asustados?” “¡El cielo se está cayendo! ¡EL CIELO SE ESTÁ CAYENDO!” gritan todos.
@@ -236,7 +232,6 @@ Grade 2 Contracted Braille:
 
 ⠠⠥⠝⠊⠋⠊⠫⠀⠠⠢⠛⠇⠊⠩⠀⠠⠃⠗⠇⠀⠐⠣⠠⠠⠥⠑⠃⠐⠜
 ⠠⠥⠝⠊⠋⠊⠫⠀⠠⠢⠛⠇⠊⠩⠀⠠⠃⠗⠇⠀⠐⠣⠠⠠⠥⠑⠃⠐⠜
-
 
 Text:
 WoooooooOOOOOOOOooooooo (a ghostly sound)
