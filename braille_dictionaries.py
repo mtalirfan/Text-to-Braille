@@ -206,8 +206,8 @@ wordsigns = {  # all: alphabetic, strong and lower
     "this": " 100111 ",
     "which": " 100011 ",
     "out": " 110011 ",
-    # LOWER WORDSIGNS not dots 1 or 4
     "still": " 001100 ",
+    # LOWER WORDSIGNS not dots 1 or 4
     "be": " 011000 ",
     "enough": " 010001 ",
     "were": " 011011 ",
