@@ -233,24 +233,24 @@ def convert_lowercase_grade1(brailled_text_caps):
     text_list_caps = brailled_text_caps.split()
 
     # individual letter decompile
-    brailled_text = ""
+    brailled_text_spaced = ""
     for i in range(len(brailled_text_caps)):
         if (  # letters in alphanumeric dictionary
             brailled_text_caps[i] in alphanumeric.keys()
             and brailled_text_caps[i].isalpha()
         ):
-            brailled_text += alphanumeric.get(brailled_text_caps[i])
+            brailled_text_spaced += alphanumeric.get(brailled_text_caps[i])
         elif (  # 6 digit numbers and whitespace since whitespace don't hurt
             brailled_text_caps[i].isdigit() or brailled_text_caps[i] == " "
         ):
-            brailled_text += brailled_text_caps[i]
+            brailled_text_spaced += brailled_text_caps[i]
         else:  # any other unrecognisable character
-            brailled_text += " 000000 "
+            brailled_text_spaced += " 000000 "
 
     # grade 1 brailled node
-    # print(brailled_text)
+    # print(brailled_text_spaced)
 
-    return brailled_text
+    return brailled_text_spaced
 
 
 def convert_lowercase_grade2_wordsigns(brailled_text_caps):
@@ -451,23 +451,30 @@ def convert_lowercase_grade2_decompile_character(brailled_text_groupsigns):
     text_list_groupsigns = brailled_text_groupsigns.split()
 
     # individual letter decompile
-    brailled_text = ""
+    brailled_text_spaced = ""
     for i in range(len(brailled_text_groupsigns)):
         if (  # letters in alphanumeric dictionary
             brailled_text_groupsigns[i] in alphanumeric.keys()
             and brailled_text_groupsigns[i].isalpha()
         ):
-            brailled_text += alphanumeric.get(brailled_text_groupsigns[i])
+            brailled_text_spaced += alphanumeric.get(brailled_text_groupsigns[i])
         elif (  # 6 digit numbers and whitespace since whitespace don't hurt
             brailled_text_groupsigns[i].isdigit() or brailled_text_groupsigns[i] == " "
         ):
-            brailled_text += brailled_text_groupsigns[i]
+            brailled_text_spaced += brailled_text_groupsigns[i]
         else:  # any other unrecognisable character
-            brailled_text += " 000000 "
+            brailled_text_spaced += " 000000 "
 
     # grade 2 brailled node
     # print(brailled_text)
 
+    return brailled_text_spaced
+
+
+def correct_spacing(brailled_text_spaced):
+    """Remove multiple spaces between words and replace them with a single space"""
+    text_list_spaced = brailled_text_spaced.split()
+    brailled_text = " ".join(text_list_spaced)
     return brailled_text
 
 
@@ -535,7 +542,7 @@ if __name__ == "__main__":
 
         # lowercase conversion
         if grade1:
-            brailled_text = convert_lowercase_grade1(brailled_text_caps)
+            brailled_text_spaced = convert_lowercase_grade1(brailled_text_caps)
         else:  # grade 2
             brailled_text_wordsigns = convert_lowercase_grade2_wordsigns(
                 brailled_text_caps
@@ -560,28 +567,36 @@ if __name__ == "__main__":
             brailled_text_groupsigns = convert_lowercase_grade2_groupsigns_substring(
                 brailled_text_groupsigns_final
             )
-            brailled_text = convert_lowercase_grade2_decompile_character(
+            brailled_text_spaced = convert_lowercase_grade2_decompile_character(
                 brailled_text_groupsigns
             )
+
+        brailled_text = correct_spacing(brailled_text_spaced)
 
         # Output
         display_braille(brailled_text)
 
-        # # Debug
-        # print(text_sym_spaced, text_sym_spaced.split())
-        # print(text_alphanumeric_spaced, text_alphanumeric_spaced.split())
-        # print(brailled_text_num_word, brailled_text_num_word.split())
-        # print(brailled_text_num, brailled_text_num.split())
-        # print(brailled_text_sym, brailled_text_sym.split())
-        # print(brailled_text_caps, brailled_text_caps.split())
-        # if grade1:
-        #     print(brailled_text, brailled_text.split())
-        # else:
-        #     print(brailled_text_wordsigns, brailled_text_wordsigns.split())
-        #     print(brailled_text_shortforms_word, brailled_text_shortforms_word.split())
-        #     print(brailled_text_shortforms, brailled_text_shortforms.split())
-        #     print(brailled_text_contractions_word, brailled_text_contractions_word.split())
-        #     print(brailled_text_contractions, brailled_text_contractions.split())
-        #     print(brailled_text_groupsigns_final, brailled_text_groupsigns_final.split())
-        #     print(brailled_text_groupsigns, brailled_text_groupsigns.split())
-        #     print(brailled_text, brailled_text.split())
+        # Debug
+        print(text_sym_spaced, text_sym_spaced.split())
+        print(text_alphanumeric_spaced, text_alphanumeric_spaced.split())
+        print(brailled_text_num_word, brailled_text_num_word.split())
+        print(brailled_text_num, brailled_text_num.split())
+        print(brailled_text_sym, brailled_text_sym.split())
+        print(brailled_text_caps, brailled_text_caps.split())
+        if grade1:
+            print(brailled_text_spaced, brailled_text_spaced.split())
+        else:
+            print(brailled_text_wordsigns, brailled_text_wordsigns.split())
+            print(brailled_text_shortforms_word, brailled_text_shortforms_word.split())
+            print(brailled_text_shortforms, brailled_text_shortforms.split())
+            print(
+                brailled_text_contractions_word, brailled_text_contractions_word.split()
+            )
+            print(brailled_text_contractions, brailled_text_contractions.split())
+            print(
+                brailled_text_groupsigns_final, brailled_text_groupsigns_final.split()
+            )
+            print(brailled_text_groupsigns, brailled_text_groupsigns.split())
+            print(brailled_text_spaced, brailled_text_spaced.split())
+
+        print(brailled_text, brailled_text.split())
